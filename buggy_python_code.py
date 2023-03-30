@@ -3,6 +3,7 @@ import os
 import urllib3
 import flask
 import yaml
+import importlib
 
 app = flask.Flask(__name__)
 
@@ -28,11 +29,12 @@ def print_nametag(format_string, person):
 
 def fetch_website(urllib_version, url):
     # Import the requested version (2 or 3) of urllib
-    exec(f"import urllib{urllib_version} as urllib", globals())
+    module = importlib.import_module("urllib" + urllib_version)
+    # exec(f"import urllib{urllib_version} as urllib", globals())
     # Fetch and print the requested URL
 
     try:
-        http = urllib3.PoolManager()
+        http = module.PoolManager()
         r = http.request('GET', url)
     except:
         print('Exception')
